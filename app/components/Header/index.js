@@ -1,31 +1,56 @@
-import React from 'react';
-import { FormattedMessage } from 'react-intl';
+import React, { Component, PropTypes } from 'react';
+import { connect } from 'react-redux';
 
-import A from './A';
-import Img from './Img';
+import { logout } from 'containers/App/actions';
+
 import NavBar from './NavBar';
 import HeaderLink from './HeaderLink';
-import Banner from './banner.jpg';
-import messages from './messages';
 
-class Header extends React.Component { // eslint-disable-line react/prefer-stateless-function
+class Header extends Component { // eslint-disable-line react/prefer-stateless-function
   render() {
     return (
-      <div>
-        <A href="https://twitter.com/mxstbr">
-          <Img src={Banner} alt="react-boilerplate - Logo" />
-        </A>
-        <NavBar>
-          <HeaderLink to="/">
-            <FormattedMessage {...messages.home} />
-          </HeaderLink>
-          <HeaderLink to="/features">
-            <FormattedMessage {...messages.features} />
-          </HeaderLink>
-        </NavBar>
-      </div>
+      <NavBar>
+        {
+          (this.props.loggedIn) ? (
+            <div>
+              <HeaderLink to="/" activeClassName="active">
+                Home
+              </HeaderLink>
+              <HeaderLink to="/dashboard" activeClassName="active">
+                Dashboard
+              </HeaderLink>
+              <HeaderLink onClick={() => this.props.dispatch(logout())} activeClassName="active">
+                Logout
+              </HeaderLink>
+            </div>
+          ) : (
+            <div>
+              <HeaderLink to="/" activeClassName="active">
+                Home
+              </HeaderLink>
+              <HeaderLink to="/login" activeClassName="active">
+                Login
+              </HeaderLink>
+              <HeaderLink to="/signup" activeClassName="active">
+                Signup
+              </HeaderLink>
+            </div>
+          )
+        }
+      </NavBar>
     );
   }
 }
 
-export default Header;
+function mapStateToProps(state) {
+  return {
+    loggedIn: state.getIn(['global', 'loggedIn']),
+  };
+}
+
+Header.propTypes = {
+  dispatch: PropTypes.func,
+  loggedIn: PropTypes.bool,
+};
+
+export default connect(mapStateToProps)(Header);

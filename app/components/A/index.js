@@ -3,12 +3,14 @@
  */
 
 import styled from 'styled-components';
+import * as style from 'components/Variables';
 
 const A = styled.a`
-  color: #41addd;
+  color: ${style.color.primary.default};
+  text-decoration: underline;
 
   &:hover {
-    color: #6cc0e5;
+    color: ${style.color.primary.hover};
   }
 `;
 
